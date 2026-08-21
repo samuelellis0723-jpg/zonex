@@ -29,7 +29,7 @@ function renderLoginForm() {
             <span class="login-brand-mark">Z</span>
             <span>Zone<span>X</span></span>
           </div>
-          <p class="login-subtitle">Plataforma de Operación de Zonas Francas</p>
+          <p class="login-subtitle">Plataforma de Operación de Zonas Francas <span class="pill light" style="background:var(--primary-soft); color:var(--primary); font-size:10px; margin-left:4px;">v1.0</span></p>
         </div>
 
         <div id="login-status" class="status-message" role="status" aria-live="polite"></div>
