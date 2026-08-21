@@ -1,19 +1,168 @@
 {
-  "zonas": [{ "id": "1", "nombre": "Zona Franca Ejemplo", "sectoresPermitidos": ["tecnologia", "manufactura", "bpo"], "inversionMinima": 50000, "empleosMinimos": 10 }],
+  "zonas": [
+    {
+      "id": "1",
+      "nombre": "Zona Franca Ejemplo",
+      "sectoresPermitidos": [
+        "tecnologia",
+        "manufactura",
+        "bpo"
+      ],
+      "inversionMinima": 50000,
+      "empleosMinimos": 10
+    }
+  ],
   "solicitudes": [
-    { "id": "1", "empresa": "NovaTech Costa Rica S.A.", "cedulaJuridica": "3-101-456789", "correo": "contacto@novatech.cr", "sector": "tecnologia", "inversionProyectada": 125000, "empleosProyectados": 42, "estado": "Recomendada", "puntaje": 100, "justificacion": "Sector permitido; inversión y empleos cumplen los mínimos de la zona.", "evaluadoEn": "2026-08-20T14:30:00.000Z", "creadoEn": "2026-08-18" },
-    { "id": "2", "empresa": "Precision Parts Ltda.", "cedulaJuridica": "3-101-555555", "correo": "info@precisionparts.cr", "sector": "manufactura", "inversionProyectada": 60000, "empleosProyectados": 8, "estado": "Revisar", "puntaje": 84, "justificacion": "Sector permitido e inversión suficiente; empleos por debajo del mínimo.", "evaluadoEn": "2026-08-20T14:31:00.000Z", "creadoEn": "2026-08-19" },
-    { "id": "3", "empresa": "Caribe Global Services", "cedulaJuridica": "3-101-222222", "correo": "operaciones@caribeglobal.cr", "sector": "bpo", "inversionProyectada": 45000, "empleosProyectados": 18, "estado": "pendiente", "creadoEn": "2026-08-21" }
+    {
+      "id": "1",
+      "empresa": "NovaTech Costa Rica S.A.",
+      "cedulaJuridica": "3-101-456789",
+      "correo": "contacto@novatech.cr",
+      "sector": "tecnologia",
+      "inversionProyectada": 125000,
+      "empleosProyectados": 42,
+      "estado": "Recomendada",
+      "puntaje": 100,
+      "justificacion": "Sector permitido; inversión y empleos cumplen los mínimos de la zona.",
+      "evaluadoEn": "2026-08-20T14:30:00.000Z",
+      "creadoEn": "2026-08-18"
+    },
+    {
+      "id": "2",
+      "empresa": "Precision Parts Ltda.",
+      "cedulaJuridica": "3-101-555555",
+      "correo": "info@precisionparts.cr",
+      "sector": "manufactura",
+      "inversionProyectada": 60000,
+      "empleosProyectados": 8,
+      "estado": "Revisar",
+      "puntaje": 84,
+      "justificacion": "Sector permitido e inversión suficiente; empleos por debajo del mínimo.",
+      "evaluadoEn": "2026-08-20T14:31:00.000Z",
+      "creadoEn": "2026-08-19"
+    },
+    {
+      "id": "3",
+      "empresa": "Caribe Global Services",
+      "cedulaJuridica": "3-101-222222",
+      "correo": "operaciones@caribeglobal.cr",
+      "sector": "bpo",
+      "inversionProyectada": 45000,
+      "empleosProyectados": 18,
+      "estado": "pendiente",
+      "creadoEn": "2026-08-21"
+    },
+    {
+      "empresa": "paca",
+      "sector": "manufactura",
+      "cedulaJuridica": "3-101-123456",
+      "inversionProyectada": 100000,
+      "empleosProyectados": 10,
+      "correo": "dadaa@gmail.com",
+      "estado": "Recomendada",
+      "creadoEn": "2026-08-21",
+      "id": "7aNGwgquKHk",
+      "puntaje": 100,
+      "clasificacion": "Recomendada",
+      "justificacion": "Sector permitido; inversión cumple y empleos cumplen frente a los requisitos de Zona Franca Ejemplo.",
+      "evaluadoEn": "2026-08-21T19:45:27.843Z"
+    },
+    {
+      "empresa": "paca",
+      "sector": "tecnologia",
+      "cedulaJuridica": "3-101-123456",
+      "inversionProyectada": 30000,
+      "empleosProyectados": 3,
+      "correo": "dasdasdfsaf@gmail.com",
+      "estado": "Revisar",
+      "creadoEn": "2026-08-21",
+      "id": "A27wMD7uXNc",
+      "puntaje": 67,
+      "clasificacion": "Revisar",
+      "justificacion": "Sector permitido; inversión bajo mínimo y empleos bajo mínimo frente a los requisitos de Zona Franca Ejemplo.",
+      "evaluadoEn": "2026-08-21T19:46:14.623Z"
+    },
+    {
+      "empresa": "paca",
+      "sector": "tecnologia",
+      "cedulaJuridica": "3-101-123456",
+      "inversionProyectada": 232323232,
+      "empleosProyectados": 2,
+      "correo": "dasdasdfsaf@gmail.com",
+      "estado": "Recomendada",
+      "creadoEn": "2026-08-21",
+      "id": "s3dmrunzD_A",
+      "puntaje": 76,
+      "clasificacion": "Recomendada",
+      "justificacion": "Sector permitido; inversión cumple y empleos bajo mínimo frente a los requisitos de Zona Franca Ejemplo.",
+      "evaluadoEn": "2026-08-21T19:48:35.746Z"
+    }
   ],
   "reportes": [
-    { "id": "1", "empresa": "NovaTech Costa Rica S.A.", "periodo": "2026-Q2", "empleosReales": 39, "inversionEjecutada": 112000, "exportaciones": 340000, "estado": "Cumple" },
-    { "id": "2", "empresa": "Precision Parts Ltda.", "periodo": "2026-Q2", "empleosReales": 6, "inversionEjecutada": 37000, "exportaciones": 98000, "estado": "Riesgo" },
-    { "id": "3", "empresa": "DataHub BPO S.A.", "periodo": "2026-Q2", "empleosReales": 28, "inversionEjecutada": 54000, "exportaciones": 175000, "estado": "En revisión" }
+    {
+      "id": "1",
+      "empresa": "NovaTech Costa Rica S.A.",
+      "periodo": "2026-Q2",
+      "empleosReales": 39,
+      "inversionEjecutada": 112000,
+      "exportaciones": 340000,
+      "estado": "Cumple"
+    },
+    {
+      "id": "2",
+      "empresa": "Precision Parts Ltda.",
+      "periodo": "2026-Q2",
+      "empleosReales": 6,
+      "inversionEjecutada": 37000,
+      "exportaciones": 98000,
+      "estado": "Riesgo"
+    },
+    {
+      "id": "3",
+      "empresa": "DataHub BPO S.A.",
+      "periodo": "2026-Q2",
+      "empleosReales": 28,
+      "inversionEjecutada": 54000,
+      "exportaciones": 175000,
+      "estado": "En revisión"
+    }
   ],
   "alertas": [
-    { "id": "1", "empresa": "Precision Parts Ltda.", "titulo": "Empleo por debajo de la meta", "descripcion": "El reporte registra 6 empleos reales frente a 10 empleos mínimos requeridos.", "nivel": "Alta", "estado": "activa", "creadoEn": "21 ago. 2026" },
-    { "id": "2", "empresa": "DataHub BPO S.A.", "titulo": "Reporte pendiente de validación", "descripcion": "Los valores reportados requieren confirmación documental del analista.", "nivel": "Media", "estado": "activa", "creadoEn": "20 ago. 2026" },
-    { "id": "3", "empresa": "NovaTech Costa Rica S.A.", "titulo": "Inversión ejecutada actualizada", "descripcion": "La empresa presentó evidencia de inversión para el periodo vigente.", "nivel": "Baja", "estado": "resuelta", "creadoEn": "18 ago. 2026" }
+    {
+      "id": "1",
+      "empresa": "Precision Parts Ltda.",
+      "titulo": "Empleo por debajo de la meta",
+      "descripcion": "El reporte registra 6 empleos reales frente a 10 empleos mínimos requeridos.",
+      "nivel": "Alta",
+      "estado": "activa",
+      "creadoEn": "21 ago. 2026"
+    },
+    {
+      "id": "2",
+      "empresa": "DataHub BPO S.A.",
+      "titulo": "Reporte pendiente de validación",
+      "descripcion": "Los valores reportados requieren confirmación documental del analista.",
+      "nivel": "Media",
+      "estado": "activa",
+      "creadoEn": "20 ago. 2026"
+    },
+    {
+      "id": "3",
+      "empresa": "NovaTech Costa Rica S.A.",
+      "titulo": "Inversión ejecutada actualizada",
+      "descripcion": "La empresa presentó evidencia de inversión para el periodo vigente.",
+      "nivel": "Baja",
+      "estado": "resuelta",
+      "creadoEn": "18 ago. 2026"
+    }
   ],
-  "usuarios": [{ "id": "1", "nombre": "Equipo ZoneX", "rol": "analista", "correo": "analista@zonex.cr" }]
+  "usuarios": [
+    {
+      "id": "1",
+      "nombre": "Equipo ZoneX",
+      "rol": "analista",
+      "correo": "analista@zonex.cr"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
