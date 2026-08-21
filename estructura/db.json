@@ -201,6 +201,21 @@
       "clasificacion": "Recomendada",
       "justificacion": "Sector permitido; inversión cumple y empleos cumplen frente a los requisitos de Zona Franca Ejemplo.",
       "evaluadoEn": "2026-08-21T20:47:24.116Z"
+    },
+    {
+      "empresa": "lola",
+      "sector": "manufactura",
+      "cedulaJuridica": "3-101-123456",
+      "inversionProyectada": 45454545,
+      "empleosProyectados": 7,
+      "correo": "dasdasdfsaf@gmail.com",
+      "estado": "Recomendada",
+      "creadoEn": "2026-08-21",
+      "id": "7AfdCOuESLQ",
+      "puntaje": 91,
+      "clasificacion": "Recomendada",
+      "justificacion": "Sector permitido; inversión cumple y empleos bajo mínimo frente a los requisitos de Zona Franca Ejemplo.",
+      "evaluadoEn": "2026-08-21T21:02:59.242Z"
     }
   ],
   "reportes": [
