@@ -1,6 +1,6 @@
 import './style.css';
 
-const API_URL = 'http://localhost:3001';
+const API_URL = 'http://127.0.0.1:3002';
 const THEME_KEY = 'zonex-theme';
 const AUTH_KEY = 'zonex-user-session';
 
@@ -215,7 +215,18 @@ function renderAppShell() {
 
       <section id="reportes" class="view">
         <div class="section-heading"><div><h2>Reporte de cumplimiento</h2><p>Seguimiento de inversión, empleo y exportaciones reportadas.</p></div></div>
-        <article class="panel table-panel"><div id="reports-table" class="table-wrap"></div></article>
+        <div class="request-layout report-layout">
+          <article class="panel form-panel"><h3>Nuevo reporte</h3><p class="form-intro">Los datos se comparan con los compromisos de la zona.</p>
+            <form id="report-form" novalidate>
+              <label>Empresa *<input name="empresa" required minlength="3" maxlength="80" placeholder="Empresa registrada"></label>
+              <label>Periodo *<input name="periodo" required pattern="^[0-9]{4}-Q[1-4]$" title="Use el formato AAAA-Q1" placeholder="2026-Q3"></label>
+              <div class="form-row"><label>Empleos reales *<input name="empleosReales" required type="number" min="0" max="100000" step="1"></label><label>Inversión ejecutada (USD) *<input name="inversionEjecutada" required type="number" min="0" max="1000000000" step="0.01"></label></div>
+              <label>Exportaciones (USD) *<input name="exportaciones" required type="number" min="0" max="10000000000" step="0.01"></label>
+              <p id="report-form-error" class="form-error" aria-live="polite"></p><button class="primary-button full-width" type="submit">Guardar y generar alertas</button>
+            </form>
+          </article>
+          <article class="panel table-panel"><div class="panel-heading"><div><h3>Reportes recibidos</h3><p>Resultados consolidados para auditoría.</p></div></div><div id="reports-table" class="table-wrap"></div></article>
+        </div>
       </section>
 
       <section id="alertas" class="view"><div class="section-heading"><div><h2>Panel de alertas</h2><p>Señales generadas automáticamente que requieren revisión humana.</p></div></div><div id="all-alerts" class="alert-card-list"></div></section>
@@ -226,6 +237,7 @@ function renderAppShell() {
 
   // Attach application listeners
   $('#request-form')?.addEventListener('submit', submitRequest);
+  $('#report-form')?.addEventListener('submit', submitReport);
   $('#evaluate-pending')?.addEventListener('click', processPending);
   $('#logout-btn')?.addEventListener('click', handleLogout);
 
@@ -269,7 +281,7 @@ function evaluarConIA(solicitud, zonaFranca) {
   return new Promise((resolve, reject) => {
     window.setTimeout(() => {
       if (!solicitud?.sector || !zonaFranca) return reject(new Error('Datos de solicitud o zona incompletos.'));
-      const sectorValido = zonaFranca.sectoresPermitidos.includes(solicitud.sector.toLowerCase());
+      const sectorValido = zonaFranca.sectoresPermitidos.some((sector) => sector.toLowerCase().replace(/s$/, '') === solicitud.sector.toLowerCase().replace(/s$/, ''));
       const puntajeInversion = Math.min(Number(solicitud.inversionProyectada) / zonaFranca.inversionMinima, 1) * 30;
       const puntajeEmpleos = Math.min(Number(solicitud.empleosProyectados) / zonaFranca.empleosMinimos, 1) * 30;
       const puntaje = Math.round((sectorValido ? 40 : 0) + puntajeInversion + puntajeEmpleos);
@@ -286,12 +298,18 @@ function evaluarConIA(solicitud, zonaFranca) {
 async function loadData() {
   try {
     const [solicitudes, reportes, alertas, zonas] = await Promise.all([
-      api('/solicitudes?_sort=creadoEn&_order=desc'),
-      api('/reportes?_sort=periodo&_order=desc'),
-      api('/alertas?_sort=creadoEn&_order=desc'),
+      api('/solicitudes'),
+      api('/reportes'),
+      api('/alertas'),
       api('/zonas')
     ]);
-    Object.assign(state, { solicitudes, reportes, alertas, zonas });
+    const newest = (left, right) => String(right.creadoEn || '').localeCompare(String(left.creadoEn || ''));
+    Object.assign(state, {
+      solicitudes: solicitudes.sort(newest),
+      reportes: reportes.sort((left, right) => String(right.periodo || '').localeCompare(String(left.periodo || ''))),
+      alertas: alertas.sort(newest),
+      zonas
+    });
     renderAll();
   } catch (error) {
     showStatus(error.message, 'error');
@@ -326,7 +344,7 @@ function renderDashboard() {
 
 function renderRequests() { const el = $('#requests-table'); if (el) el.innerHTML = `<table><thead><tr><th>Empresa</th><th>Sector</th><th>Inversión</th><th>IA</th><th>Estado</th><th></th></tr></thead><tbody>${state.solicitudes.map((s) => `<tr><td><strong>${escapeHtml(s.empresa)}</strong><small>${escapeHtml(s.cedulaJuridica)}</small></td><td>${escapeHtml(s.sector)}</td><td>${money(s.inversionProyectada)}</td><td>${s.puntaje ?? '—'}</td><td>${badge(s.estado)}</td><td><button class="table-action detail-trigger" data-id="${s.id}">Ver análisis</button></td></tr>`).join('')}</tbody></table>`; }
 function renderReports() { const el = $('#reports-table'); if (el) el.innerHTML = `<table><thead><tr><th>Empresa</th><th>Periodo</th><th>Empleos reales</th><th>Inversión ejecutada</th><th>Exportaciones</th><th>Estado</th></tr></thead><tbody>${state.reportes.map((r) => `<tr><td><strong>${escapeHtml(r.empresa)}</strong></td><td>${escapeHtml(r.periodo)}</td><td>${r.empleosReales}</td><td>${money(r.inversionEjecutada)}</td><td>${money(r.exportaciones)}</td><td>${badge(r.estado)}</td></tr>`).join('')}</tbody></table>`; }
-function renderAlerts() { const el = $('#all-alerts'); if (el) el.innerHTML = state.alertas.map((a) => `<article class="alert-card"><div class="alert-card-icon ${statusClass(a.nivel)}">!</div><div><div class="alert-card-heading"><div><h3>${escapeHtml(a.titulo)}</h3><p>${escapeHtml(a.empresa)} · ${escapeHtml(a.creadoEn)}</p></div>${badge(a.nivel)}</div><p>${escapeHtml(a.descripcion)}</p><small>Estado: ${escapeHtml(a.estado)}</small></div></article>`).join('') || '<p class="empty">No hay alertas registradas.</p>'; }
+function renderAlerts() { const el = $('#all-alerts'); if (el) el.innerHTML = state.alertas.map((a) => `<article class="alert-card"><div class="alert-card-icon ${statusClass(a.nivel)}">!</div><div><div class="alert-card-heading"><div><h3>${escapeHtml(a.titulo)}</h3><p>${escapeHtml(a.empresa)} · ${escapeHtml(a.creadoEn)}</p></div>${badge(a.nivel)}</div><p>${escapeHtml(a.descripcion)}</p><small>Estado: ${escapeHtml(a.estado)}</small>${a.estado === 'activa' ? `<button class="table-action resolve-alert" data-id="${a.id}">Marcar como resuelta</button>` : ''}</div></article>`).join('') || '<p class="empty">No hay alertas registradas.</p>'; }
 
 function renderDetail(id) {
   const s = state.solicitudes.find((item) => String(item.id) === String(id));
@@ -335,7 +353,7 @@ function renderDetail(id) {
   const z = state.zonas[0];
   const detailContent = $('#detail-content');
   if (detailContent) {
-    detailContent.innerHTML = `<div class="detail-header"><div><p class="eyebrow">ANÁLISIS DE IA</p><h2>${escapeHtml(s.empresa)}</h2><p>${escapeHtml(s.cedulaJuridica)} · ${escapeHtml(s.correo)}</p></div>${badge(s.estado)}</div><div class="detail-grid"><article class="panel score-panel"><p>Puntaje de elegibilidad</p><strong>${s.puntaje ?? '—'}<small>/100</small></strong><div class="score-track"><span style="width:${s.puntaje ?? 0}%"></span></div><p>${s.estado === 'pendiente' ? 'Pendiente de evaluación.' : escapeHtml(s.justificacion)}</p></article><article class="panel"><h3>Datos declarados</h3><dl><dt>Sector</dt><dd>${escapeHtml(s.sector)}</dd><dt>Inversión proyectada</dt><dd>${money(s.inversionProyectada)}</dd><dt>Empleos proyectados</dt><dd>${s.empleosProyectados}</dd><dt>Zona evaluada</dt><dd>${escapeHtml(z?.nombre || '—')}</dd></dl></article></div><article class="human-note"><span>✓</span><div><strong>Decisión final pendiente de analista</strong><p>La IA entrega una recomendación explicable; no sustituye la aprobación humana.</p></div></article>`;
+    detailContent.innerHTML = `<div class="detail-header"><div><p class="eyebrow">ANÁLISIS DE IA</p><h2>${escapeHtml(s.empresa)}</h2><p>${escapeHtml(s.cedulaJuridica)} · ${escapeHtml(s.correo)}</p></div>${badge(s.estado)}</div><div class="detail-grid"><article class="panel score-panel"><p>Puntaje de elegibilidad</p><strong>${s.puntaje ?? '—'}<small>/100</small></strong><div class="score-track"><span style="width:${s.puntaje ?? 0}%"></span></div><p>${s.estado === 'pendiente' ? 'Pendiente de evaluación.' : escapeHtml(s.justificacion)}</p></article><article class="panel"><h3>Datos declarados</h3><dl><dt>Sector</dt><dd>${escapeHtml(s.sector)}</dd><dt>Inversión proyectada</dt><dd>${money(s.inversionProyectada)}</dd><dt>Empleos proyectados</dt><dd>${s.empleosProyectados}</dd><dt>Zona evaluada</dt><dd>${escapeHtml(z?.nombre || '—')}</dd></dl></article></div><article class="human-note"><span>✓</span><div><strong>${s.decisionFinal ? `Decisión humana: ${escapeHtml(s.decisionFinal)}` : 'Decisión final pendiente de analista'}</strong><p>La IA entrega una recomendación explicable; no sustituye la aprobación humana.</p>${s.decisionFinal ? `<small>Registrada por ${escapeHtml(s.decididoPor || 'analista')} el ${escapeHtml(s.decididoEn || '')}</small>` : `<div class="decision-actions"><button class="secondary-button decision-button" data-decision="Aprobada" data-id="${s.id}">Aprobar solicitud</button><button class="danger-button decision-button" data-decision="Rechazada" data-id="${s.id}">Rechazar solicitud</button></div>`}</div></article>`;
     showView('detalle');
   }
 }
@@ -398,6 +416,65 @@ async function submitRequest(event) {
   }
 }
 
+async function submitReport(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const formError = $('#report-form-error');
+  formError.textContent = '';
+  if (!form.checkValidity()) {
+    formError.textContent = 'Revise los campos obligatorios y el formato del periodo.';
+    form.reportValidity();
+    return;
+  }
+  const button = form.querySelector('[type="submit"]');
+  setLoading(button, true, 'Procesando…');
+  const values = Object.fromEntries(new FormData(form));
+  const zone = state.zonas[0];
+  const request = { ...values, empleosReales: Number(values.empleosReales), inversionEjecutada: Number(values.inversionEjecutada), exportaciones: Number(values.exportaciones), estado: 'En revisión', creadoEn: new Date().toISOString() };
+  try {
+    const created = await api('/reportes', { method: 'POST', body: JSON.stringify(request) });
+    const riesgoEmpleo = created.empleosReales < zone.empleosMinimos;
+    const riesgoInversion = created.inversionEjecutada < zone.inversionMinima;
+    const estado = reportStatus(riesgoEmpleo, riesgoInversion);
+    await api(`/reportes/${created.id}`, { method: 'PATCH', body: JSON.stringify({ estado }) });
+    if (estado === 'Riesgo') {
+      await api('/alertas', { method: 'POST', body: JSON.stringify({ empresa: created.empresa, titulo: 'Reporte bajo los mínimos', descripcion: `El reporte ${created.periodo} registra ${riesgoEmpleo ? 'empleos' : 'inversión'} por debajo del umbral configurado.`, nivel: 'Alta', estado: 'activa', creadoEn: new Date().toLocaleDateString('es-CR', { day: '2-digit', month: 'short', year: 'numeric' }) }) });
+    }
+    form.reset();
+    showStatus(estado === 'Riesgo' ? 'Reporte guardado y alerta generada para revisión.' : 'Reporte guardado correctamente.', estado === 'Riesgo' ? 'info' : 'success');
+    await loadData();
+  } catch (error) {
+    showStatus(error.message, 'error');
+  } finally {
+    setLoading(button, false);
+  }
+}
+
+function reportStatus(riesgoEmpleo, riesgoInversion) {
+  return riesgoEmpleo || riesgoInversion ? 'Riesgo' : 'Cumple';
+}
+
+async function registerDecision(id, decision) {
+  try {
+    await api(`/solicitudes/${id}`, { method: 'PATCH', body: JSON.stringify({ decisionFinal: decision, decididoPor: state.user?.name || 'Analista', decididoEn: new Date().toISOString(), estado: decision }) });
+    showStatus(`Decisión ${decision.toLowerCase()} registrada en la auditoría.`, 'success');
+    await loadData();
+    renderDetail(id);
+  } catch (error) {
+    showStatus(error.message, 'error');
+  }
+}
+
+async function resolveAlert(id) {
+  try {
+    await api(`/alertas/${id}`, { method: 'PATCH', body: JSON.stringify({ estado: 'resuelta', resueltaPor: state.user?.name || 'Analista', resueltaEn: new Date().toISOString() }) });
+    showStatus('Alerta marcada como resuelta.', 'success');
+    await loadData();
+  } catch (error) {
+    showStatus(error.message, 'error');
+  }
+}
+
 function initializeTheme() {
   const saved = localStorage.getItem(THEME_KEY);
   const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -422,6 +499,10 @@ app.addEventListener('click', (event) => {
   if (detailButton) renderDetail(detailButton.dataset.id);
   if (event.target.closest('#theme-toggle')) setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
   if (event.target.closest('[data-open-form]')) window.setTimeout(() => $('#request-form')?.querySelector('input')?.focus(), 50);
+  const decisionButton = event.target.closest('.decision-button');
+  if (decisionButton) registerDecision(decisionButton.dataset.id, decisionButton.dataset.decision);
+  const resolveButton = event.target.closest('.resolve-alert');
+  if (resolveButton) resolveAlert(resolveButton.dataset.id);
 });
 
 // App Initialization

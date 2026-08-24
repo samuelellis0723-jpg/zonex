@@ -96,6 +96,21 @@
       "clasificacion": "Recomendada",
       "justificacion": "Sector permitido; inversión cumple y empleos bajo mínimo frente a los requisitos de Zona Franca Ejemplo.",
       "evaluadoEn": "2026-08-21T19:48:35.746Z"
+    },
+    {
+      "empresa": "aaaaaaaaaaaaaaa",
+      "sector": "tecnologia",
+      "cedulaJuridica": "3-103-123266",
+      "inversionProyectada": 1111110.83,
+      "empleosProyectados": 1,
+      "correo": "quirosfwdcostarica@gmail.com",
+      "estado": "Revisar",
+      "creadoEn": "2026-08-24",
+      "id": "EyOgZ_yOQgk",
+      "puntaje": 73,
+      "clasificacion": "Revisar",
+      "justificacion": "Sector permitido; inversión cumple y empleos bajo mínimo frente a los requisitos de Zona Franca Ejemplo.",
+      "evaluadoEn": "2026-08-24T14:51:25.137Z"
     }
   ],
   "reportes": [

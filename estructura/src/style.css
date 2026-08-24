@@ -201,3 +201,14 @@
   border-color: var(--danger);
   color: var(--danger);
 }
+
+.decision-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:14px; }
+.danger-button { background:var(--danger-soft); border:1px solid var(--danger); border-radius:8px; color:var(--danger); font-size:13px; font-weight:700; padding:11px 15px; }
+.danger-button:hover { filter:brightness(.96); }
+.resolve-alert { display:inline-block; margin-top:12px; }
+.report-layout .table-panel { min-width:0; }
+
+@media (max-width:760px) {
+  .decision-actions { align-items:stretch; flex-direction:column; }
+  .decision-actions button { width:100%; }
+}
