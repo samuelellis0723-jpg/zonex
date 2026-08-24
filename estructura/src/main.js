@@ -2,6 +2,10 @@ import './style.css';
 
 const API_URL = 'http://localhost:3001';
 const THEME_KEY = 'zonex-theme';
+const SESSION_KEY = 'zonex-session';
+
+const currentUser = JSON.parse(localStorage.getItem(SESSION_KEY) || sessionStorage.getItem(SESSION_KEY) || 'null');
+if (!currentUser) window.location.replace('/login/index.html');
 
 const state = { solicitudes: [], reportes: [], alertas: [], zonas: [], seleccion: null };
 
@@ -18,7 +22,8 @@ app.innerHTML = `
       <button class="nav-link" data-view="reportes"><span>▤</span> Cumplimiento</button>
       <button class="nav-link" data-view="alertas"><span>◉</span> Alertas <b id="alert-badge">0</b></button>
     </nav>
-    <div class="sidebar-footer"><div class="user-avatar">ZT</div><div><strong>Equipo ZoneX</strong><small>Analista</small></div></div>
+    <div class="sidebar-footer"><div id="user-avatar" class="user-avatar">ZX</div><div><strong id="current-user-name">Usuario ZoneX</strong><small id="current-user-role">Sin rol</small></div></div>
+    <button id="logout-button" class="logout-button">↪ Cerrar sesión</button>
   </aside>
   <main class="content">
     <header class="topbar">
@@ -100,14 +105,14 @@ function evaluarConIA(solicitud, zonaFranca) {
   });
 }
 
-async function loadData() {
+async function loadData(silent = false) {
   try {
     const [solicitudes, reportes, alertas, zonas] = await Promise.all([api('/solicitudes?_sort=creadoEn&_order=desc'), api('/reportes?_sort=periodo&_order=desc'), api('/alertas?_sort=creadoEn&_order=desc'), api('/zonas')]);
     Object.assign(state, { solicitudes, reportes, alertas, zonas }); renderAll();
-  } catch (error) { showStatus(error.message, 'error'); renderEmptyState(); }
+  } catch (error) { if (!silent) showStatus(error.message, 'error'); renderEmptyState(); }
 }
 
-function renderAll() { renderDashboard(); renderRequests(); renderReports(); renderAlerts(); }
+function renderAll() { renderDashboard(); renderRequests(); renderReports(); renderHistory($('#history-search')?.value || ''); renderAlerts(); }
 function renderEmptyState() { $('#priority-list').innerHTML = '<p class="empty">No se pudo conectar con la API.</p>'; }
 function statusClass(status) { return ({ Recomendada: 'success', Revisar: 'warning', Rechazada: 'danger', pendiente: 'neutral', Cumple: 'success', Riesgo: 'danger', 'En revisión': 'warning', Alta: 'danger', Media: 'warning', Baja: 'info' })[status] || 'neutral'; }
 function badge(status) { return `<span class="badge ${statusClass(status)}">${escapeHtml(status)}</span>`; }
@@ -136,7 +141,9 @@ async function submitRequest(event) { event.preventDefault(); const form = event
 
 function initializeTheme() { const saved = localStorage.getItem(THEME_KEY); const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; setTheme(saved || preferred); }
 function setTheme(theme) { document.documentElement.dataset.theme = theme; $('#theme-toggle').textContent = theme === 'dark' ? '☀' : '☾'; $('#theme-toggle').setAttribute('aria-label', theme === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'); localStorage.setItem(THEME_KEY, theme); }
+function initializeSession() { const name = currentUser?.nombre || 'Usuario ZoneX'; $('#current-user-name').textContent = name; $('#current-user-role').textContent = currentUser?.rol || 'Usuario'; $('#user-avatar').textContent = name.split(' ').map((word) => word[0]).join('').slice(0, 2).toUpperCase(); }
+function logout() { localStorage.removeItem(SESSION_KEY); sessionStorage.removeItem(SESSION_KEY); window.location.replace('/login/index.html'); }
 
 app.addEventListener('click', (event) => { const viewButton = event.target.closest('[data-view]'); if (viewButton) showView(viewButton.dataset.view); const detailButton = event.target.closest('.detail-trigger'); if (detailButton) renderDetail(detailButton.dataset.id); if (event.target.closest('#theme-toggle')) setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'); if (event.target.closest('[data-open-form]')) window.setTimeout(() => $('#request-form').querySelector('input').focus(), 50); });
 $('#history-search').addEventListener('input', (event) => renderHistory(event.target.value));
-$('#request-form').addEventListener('submit', submitRequest); $('#evaluate-pending').addEventListener('click', processPending); initializeTheme(); loadData();
+$('#request-form').addEventListener('submit', submitRequest); $('#evaluate-pending').addEventListener('click', processPending); $('#logout-button').addEventListener('click', logout); initializeTheme(); initializeSession(); loadData(); window.setInterval(() => { if (!document.hidden) loadData(true); }, 5000);

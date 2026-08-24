@@ -216,6 +216,21 @@
       "clasificacion": "Recomendada",
       "justificacion": "Sector permitido; inversión cumple y empleos bajo mínimo frente a los requisitos de Zona Franca Ejemplo.",
       "evaluadoEn": "2026-08-21T21:02:59.242Z"
+    },
+    {
+      "empresa": "samuelux",
+      "sector": "tecnologia",
+      "cedulaJuridica": "3-101-123456",
+      "inversionProyectada": 10000000,
+      "empleosProyectados": 22,
+      "correo": "dasdasdfsaf@gmail.com",
+      "estado": "Recomendada",
+      "creadoEn": "2026-08-22",
+      "id": "7_OvK-4MC10",
+      "puntaje": 100,
+      "clasificacion": "Recomendada",
+      "justificacion": "Sector permitido; inversión cumple y empleos cumplen frente a los requisitos de Zona Franca Ejemplo.",
+      "evaluadoEn": "2026-08-22T03:48:11.276Z"
     }
   ],
   "reportes": [
@@ -279,9 +294,27 @@
   "usuarios": [
     {
       "id": "1",
-      "nombre": "Equipo ZoneX",
-      "rol": "analista",
-      "correo": "analista@zonex.cr"
+      "nombre": "Ana Morales",
+      "rol": "Administradora",
+      "correo": "admin@zonex.cr",
+      "contrasena": "ZoneX2026!",
+      "activo": true
+    },
+    {
+      "id": "2",
+      "nombre": "Samu Vargas",
+      "rol": "Analista",
+      "correo": "analista@zonex.cr",
+      "contrasena": "ZoneX2026!",
+      "activo": true
+    },
+    {
+      "id": "3",
+      "nombre": "Tiff Rodríguez",
+      "rol": "Supervisor",
+      "correo": "supervisor@zonex.cr",
+      "contrasena": "ZoneX2026!",
+      "activo": true
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
