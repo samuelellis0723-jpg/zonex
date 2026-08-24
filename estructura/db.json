@@ -111,6 +111,21 @@
       "clasificacion": "Revisar",
       "justificacion": "Sector permitido; inversión cumple y empleos bajo mínimo frente a los requisitos de Zona Franca Ejemplo.",
       "evaluadoEn": "2026-08-24T14:51:25.137Z"
+    },
+    {
+      "empresa": "jugados",
+      "sector": "tecnologia",
+      "cedulaJuridica": "3-101-123456",
+      "inversionProyectada": 4000,
+      "empleosProyectados": 20,
+      "correo": "jugados@gmail.com",
+      "estado": "Revisar",
+      "creadoEn": "2026-08-24",
+      "id": "X0Spe-FvEtk",
+      "puntaje": 72,
+      "clasificacion": "Revisar",
+      "justificacion": "Sector permitido; inversión bajo mínimo y empleos cumplen frente a los requisitos de Zona Franca Ejemplo.",
+      "evaluadoEn": "2026-08-24T16:08:35.501Z"
     }
   ],
   "reportes": [
@@ -149,8 +164,10 @@
       "titulo": "Empleo por debajo de la meta",
       "descripcion": "El reporte registra 6 empleos reales frente a 10 empleos mínimos requeridos.",
       "nivel": "Alta",
-      "estado": "activa",
-      "creadoEn": "21 ago. 2026"
+      "estado": "resuelta",
+      "creadoEn": "21 ago. 2026",
+      "resueltaPor": "Equipo ZoneX",
+      "resueltaEn": "2026-08-24T16:09:29.173Z"
     },
     {
       "id": "2",
