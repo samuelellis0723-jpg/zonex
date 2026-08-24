@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Acceso seguro a la plataforma ZoneX.">
+    <title>Ingresar | ZoneX</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main class="login-layout">
+      <section class="brand-panel"><a class="brand" href="../"><span>Z</span> Zone<i>X</i></a><div class="brand-copy"><p class="eyebrow">GESTIÓN DE ZONA FRANCA</p><h1>Decisiones ágiles.<br>Operación confiable.</h1><p>Accede al centro de gestión y mantén cada solicitud bajo control.</p></div><p class="copyright">© 2026 ZoneX Costa Rica</p></section>
+      <section class="form-panel">
+        <div class="login-card">
+          <div class="card-heading"><p class="eyebrow">BIENVENIDO DE NUEVO</p><h2>Ingresa a tu cuenta</h2><p>Usa tus credenciales para continuar.</p></div>
+          <form id="login-form" novalidate>
+            <label>Correo o usuario<input id="email" name="email" type="email" autocomplete="username" required placeholder="nombre@zonex.cr"></label>
+            <label>Contraseña<div class="password-field"><input id="password" name="password" type="password" autocomplete="current-password" required minlength="8" placeholder="Ingresa tu contraseña"><button id="toggle-password" type="button" aria-label="Mostrar contraseña" title="Mostrar contraseña">◉</button></div></label>
+            <div class="form-options"><label class="remember"><input id="remember" type="checkbox"> <span>Recordarme</span></label><a href="#recuperar" id="forgot-link">¿Olvidaste tu contraseña?</a></div>
+            <p id="login-message" class="form-message" role="alert" aria-live="polite"></p><button id="login-button" class="submit-button" type="submit">Entrar <span>→</span></button>
+          </form>
+          <div class="divider"><span>o continúa con</span></div>
+          <div class="social-buttons"><button type="button" class="social-button" data-social="Google"><b class="google">G</b> Google</button><button type="button" class="social-button" data-social="Apple"><b class="apple">●</b> Apple</button></div>
+          <p class="register">¿No tienes una cuenta? <a href="#registro" id="register-link">Registrarse</a></p>
+        </div>
+      </section>
+    </main>
+    <script src="./script.js"></script>
+  </body>
+</html>
